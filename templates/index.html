@@ -18,15 +18,16 @@
             width: 80%;
             max-width: 800px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-container h1 {
             margin-bottom: 20px;
         }
         .form-group {
-            flex: 1;
-            margin-right: 10px;
-        }
-        .form-group:last-child {
-            margin-right: 0;
+            width: 100%;
+            margin-bottom: 10px;
         }
         .form-group label {
             display: block;
@@ -64,6 +65,15 @@
             border-radius: 20px;
             padding: 20px;
             text-align: left;
+            cursor: pointer;
+        }
+        .alert {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -93,6 +103,7 @@
             <p id="sha256"></p>
             <p id="message"></p>
         </div>
+        <div class="alert" id="alert">복사되었습니다</div>
     </div>
 
     <script>
@@ -103,6 +114,7 @@
         const sha1Element = document.getElementById('sha1');
         const sha256Element = document.getElementById('sha256');
         const messageElement = document.getElementById('message');
+        const alertBox = document.getElementById('alert');
 
         const mentorNameInput = document.getElementById('mentor-name');
         const myNameInput = document.getElementById('my-name');
@@ -165,6 +177,18 @@
 
         mentorNameInput.addEventListener('input', updateMessage);
         myNameInput.addEventListener('input', updateMessage);
+
+        result.addEventListener('click', () => {
+            const textToCopy = result.innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alertBox.style.display = 'block';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        });
     </script>
 
 </body>
