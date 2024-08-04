@@ -8,21 +8,47 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             margin: 0;
             padding: 20px;
             height: 100vh;
         }
+        .form-container {
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .form-group:last-child {
+            margin-right: 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
         .container {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            align-items: center;
             width: 80%;
             max-width: 800px;
         }
         .drop-area {
-            width: 45%;
-            height: 300px;
+            width: 100%;
+            height: 150px;
             border: 2px dashed #ccc;
             border-radius: 20px;
             display: flex;
@@ -30,30 +56,39 @@
             justify-content: center;
             text-align: center;
             color: #aaa;
-            margin-right: 10%;
+            margin-bottom: 20px;
         }
         .result {
-            width: 45%;
-            height: 300px;
+            width: 100%;
             border: 2px solid #ccc;
             border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
             padding: 20px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
+
+    <div class="form-container">
+        <div class="form-group">
+            <label for="mentor-name">Mentor Name:</label>
+            <input type="text" id="mentor-name" placeholder="Enter mentor name">
+        </div>
+        <div class="form-group">
+            <label for="my-name">My Name:</label>
+            <input type="text" id="my-name" placeholder="Enter your name">
+        </div>
+    </div>
 
     <div class="container">
         <div class="drop-area" id="drop-area">
             Drag & Drop your file here
         </div>
         <div class="result" id="result">
-            <p id="hash"></p>
+            <p id="filename"></p>
+            <p id="md5"></p>
+            <p id="sha1"></p>
+            <p id="sha256"></p>
             <p id="message"></p>
         </div>
     </div>
@@ -61,8 +96,14 @@
     <script>
         const dropArea = document.getElementById('drop-area');
         const result = document.getElementById('result');
-        const hashElement = document.getElementById('hash');
+        const filenameElement = document.getElementById('filename');
+        const md5Element = document.getElementById('md5');
+        const sha1Element = document.getElementById('sha1');
+        const sha256Element = document.getElementById('sha256');
         const messageElement = document.getElementById('message');
+
+        const mentorNameInput = document.getElementById('mentor-name');
+        const myNameInput = document.getElementById('my-name');
 
         dropArea.addEventListener('dragover', (event) => {
             event.preventDefault();
@@ -91,8 +132,22 @@
                     if (data.error) {
                         messageElement.textContent = data.error;
                     } else {
-                        hashElement.textContent = `MD5 Hash: ${data.hash}`;
-                        messageElement.textContent = data.message;
+                        // filenameElement.textContent = `File Name: ${data.filename}`;
+                        // md5Element.textContent = `MD5: ${data.md5}`;
+                        // sha1Element.textContent = `SHA-1: ${data.sha1}`;
+                        // sha256Element.textContent = `SHA-256: ${data.sha256}`;
+                        const mentorName = mentorNameInput.value;
+                        const myName = myNameInput.value;
+                        messageElement.innerHTML = `
+                            안녕하십니까 ${mentorName} 멘토님,<br>
+                            BOB13기 디지털포렌식 ${myName}입니다.<br>
+                            첨부파일을 통해 과제를 제출합니다.<br>
+                            ==========<br>
+                            FILE NAME: ${data.filename}<br>
+                            MD5: ${data.md5}<br>
+                            SHA-1: ${data.sha1}<br>
+                            SHA-256: ${data.sha256}
+                        `;
                     }
                 })
                 .catch(error => {
