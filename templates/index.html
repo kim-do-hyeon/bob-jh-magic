@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload with Flask</title>
+    <title>JH Magic Web Version</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,7 +68,9 @@
     </style>
 </head>
 <body>
-
+    <div class="form-container">
+        <h1>JH Magic - BOB13</h1>
+    </div>
     <div class="form-container">
         <div class="form-group">
             <label for="mentor-name">Mentor Name:</label>
@@ -105,6 +107,25 @@
         const mentorNameInput = document.getElementById('mentor-name');
         const myNameInput = document.getElementById('my-name');
 
+        let fileData = {};
+
+        const updateMessage = () => {
+            const mentorName = mentorNameInput.value;
+            const myName = myNameInput.value;
+            if (fileData.filename) {
+                messageElement.innerHTML = `
+                    안녕하십니까 ${mentorName} 멘토님,<br>
+                    BOB13기 디지털포렌식 ${myName}입니다.<br>
+                    첨부파일을 통해 과제를 제출합니다.<br>
+                    ==========<br>
+                    FILE NAME: ${fileData.filename}<br>
+                    MD5: ${fileData.md5}<br>
+                    SHA-1: ${fileData.sha1}<br>
+                    SHA-256: ${fileData.sha256}
+                `;
+            }
+        };
+
         dropArea.addEventListener('dragover', (event) => {
             event.preventDefault();
             dropArea.style.borderColor = '#333';
@@ -132,22 +153,8 @@
                     if (data.error) {
                         messageElement.textContent = data.error;
                     } else {
-                        // filenameElement.textContent = `File Name: ${data.filename}`;
-                        // md5Element.textContent = `MD5: ${data.md5}`;
-                        // sha1Element.textContent = `SHA-1: ${data.sha1}`;
-                        // sha256Element.textContent = `SHA-256: ${data.sha256}`;
-                        const mentorName = mentorNameInput.value;
-                        const myName = myNameInput.value;
-                        messageElement.innerHTML = `
-                            안녕하십니까 ${mentorName} 멘토님,<br>
-                            BOB13기 디지털포렌식 ${myName}입니다.<br>
-                            첨부파일을 통해 과제를 제출합니다.<br>
-                            ==========<br>
-                            FILE NAME: ${data.filename}<br>
-                            MD5: ${data.md5}<br>
-                            SHA-1: ${data.sha1}<br>
-                            SHA-256: ${data.sha256}
-                        `;
+                        fileData = data;
+                        updateMessage();
                     }
                 })
                 .catch(error => {
@@ -155,6 +162,9 @@
                 });
             }
         });
+
+        mentorNameInput.addEventListener('input', updateMessage);
+        myNameInput.addEventListener('input', updateMessage);
     </script>
 
 </body>
